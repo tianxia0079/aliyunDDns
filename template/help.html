@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>帮助1</title>
+</head>
+<body>
+a
+</body>
+{{template "footer"}}
+<script type="application/javascript">
+    var re = new RegExp(/(\/+|^)[a-z]{1,}\.[a-z]{1,}(\/+|$)/);
+    console.log("正则测试", re.test("abc.top"))
+    console.log("正则测试", re.test("wwww.abc.top"))
+
+
+    console.log("正则测试", IsURL(/(\/+|^)[a-z]{1,}\.[a-z]{1,}(\/+|$)/, "abc.top"))
+    console.log("正则测试", IsURL(/(\/+|^)[a-z]{1,}\.[a-z]{1,}(\/+|$)/, "www.abc.top"))
+
+
+</script>
+</html>

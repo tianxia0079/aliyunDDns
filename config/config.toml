@@ -1,0 +1,35 @@
+# HTTP Server
+[server]
+	Address     = ":95"
+	ServerRoot  = "public"
+	ServerAgent = "AliYunDns"
+	LogPath     = "./logs/"
+# Template.
+[viewer]
+    Path        = "template"
+    DefaultFile = "index.html"
+    Delimiters  =  ["${", "}"]
+# Logger.
+[logger]
+    Path        = "./logs/aliyunddns"
+    Level       = "all"
+    Stdout      = true
+# Database.
+[database]
+    [[database.default]]
+        type = "sqlite"
+        debug = true
+        link = "./db/ddns.db"
+[compiler]
+    name     = "AliyunDDNS"
+    version  = "1.0.0"
+    arch     = "i386,amd64"
+    system   = "linux,windows,darwin"
+    output   = ""
+    path     = "./.bin"
+    CGO_ENABLED = "1"
+    extra    = "-ldflags \"-s -w\""
+    # 自定义编译时内置变量
+    [compiler.VarMap]
+        author = "adminD"
+        email  = "310336951@qq.com"

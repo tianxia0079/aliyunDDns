@@ -1,0 +1,12 @@
+[compiler]
+    name     = "AliYunDns"
+    version  = "1.1.0"
+    arch     = "i386,amd64"
+    system   = "linux,windows,darwin"
+    output   = ""
+    path     = "./.bin"
+    extra    = "-ldflags \"-s -w\""
+    # 自定义编译时内置变量
+    [compiler.VarMap]
+        author = "adminSSD"
+        email  = "golang@qq.com"

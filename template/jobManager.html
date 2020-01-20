@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{template "header"}}
+    <title>addjob</title>
+</head>
+<body>
+<div class="layui-container">
+    <div class="layui-row" style="margin-top: 50px;text-align: center">
+        <form class="layui-form layui-form-pane" enctype="multipart/form-data">
+            <div id="hidden_edit">
+                <input type="text" hidden="hidden" name="id" value="{{.id}}">
+                <input type="text" hidden="hidden" name="state" value="{{.state}}">
+
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 20%">顶级域名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="domain" style="width: 90%" value="{{.domain}}"
+                           lay-verify="required|domain"
+                           placeholder="请输入顶级域名 如: abc.com "
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 20%">更新规则</label>
+                <div class="layui-input-block">
+                    {{ if  .comment  }}
+                        <input readonly="readonly" type="text" name="comment" style="width: 90%;color: blueviolet"
+                               value="{{ .comment}}"
+                               lay-verify="required"
+                               placeholder="选择定时更新域名场景"
+                               class="layui-input">
+                    {{else}}
+                        <input readonly="readonly" type="text" name="comment" style="width: 90%;color: blueviolet"
+                               value="更新域名下所有A记录IP 目前仅提供该场景"
+                               lay-verify="required"
+                               placeholder="选择定时更新域名场景"
+                               class="layui-input">
+                    {{end}}
+
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 20%">cron表达式</label>
+                <div class="layui-input-block">
+                    <input type="text" name="cron" style="width: 90%" value="{{.cron}}"
+                           lay-verify="required|cron"
+                           placeholder="请输入 cron"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="text-align: center">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="savebt">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{template "footer"}}
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //各种基于事件的操作，下面会有进一步介绍
+        //监听提交
+        form.on('submit(savebt)', function (data) {
+            //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            ajaxPostNoAsync("/AddOne", $(data.form).serialize(), function (datastr) {
+                var dataInner = eval('(' + datastr + ')');
+                console.log("返回内容", dataInner, typeof (dataInner), "dataInner.code=", dataInner.code, dataInner.message)
+                if (dataInner.code == "success") {
+                    successMsg('操作成功!')
+                    setTimeout(function () {
+                        table_layer_close()
+                        return false;
+                    }, 2000)
+                } else {
+                    console.log("1")
+                    failMsg('操作失败!' + dataInner.message)
+                    return false;
+                }
+            })
+
+
+            return false;
+        });
+
+        form.verify({
+            domain: function (value, item) { //value：表单的值、item：表单的DOM对象
+                //todo:前端用正则验证 abc.xyz
+                //if (value.indexOf(".") > 1 && value.split(".").length == 2) {
+                // } else {
+                //    return '请输入顶级域名,如 baidu.com ';
+                //}
+                if (IsURL(/(\/+|^)[a-z]{1,}\.[a-z]{1,}(\/+|$)/, value)) {
+
+                } else {
+                    return '请输入顶级域名,如 baidu.com ';
+                }
+            },
+            cron: function (value, itme) {
+                //todo:前端用正则校验cron 不可用 ,后台校验生效.
+                if (!cronValidate(value)) {
+                } else {
+                    return '请输入合法的cron表达式';
+                }
+            }
+        });
+    });
+
+
+</script>
+</body>
+</html>

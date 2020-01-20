@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>阿里云DDNS</title>
+
+    {{template "header"}}
+    <style type="text/css">
+        /*.layui-table-cell {
+            height: auto;
+            overflow: visible;
+            text-overflow: inherit;
+            white-space: normal;
+        }*/
+    </style>
+</head>
+<body>
+
+<div class="layui-container">
+    <div class="layui-row" style="text-align: center">
+        <div style="width: 95%;text-align: center">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                <legend style="font-size: 30px;color: #1E9FFF"> 阿里云DDNS自动更新</legend>
+            </fieldset>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                <legend>阿里云全局秘钥配置</legend>
+            </fieldset>
+            <form id="form1" class="layui-form layui-form-pane" method="post">
+                <div class="layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label style="width: 100%;" class="layui-form-label">AccessKey ID</label>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                        <input type="text" id="ACCESS_KEY_ID" value="{{.ACCESS_KEY_ID}}"
+                               autocomplete="off"
+                               placeholder="请输入 ACCESS_KEY_ID"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label style="width: 100%;" class="layui-form-label"
+                               style="width: 20%">Access Key Secret</label>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                        <input type="text" id="ACCESS_KEY_SECRET" value="{{.ACCESS_KEY_SECRET}}"
+                               autocomplete="off"
+                               placeholder="请输入 ACCESS_KEY_SECRET"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label style="width: 100%;" class="layui-form-label" style="width: 20%">获取IP接口</label>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                        <input type="text" id="IPAPI" value="{{.IPAPI}}"
+                               autocomplete="off"
+                               placeholder="请输入 IPAPI 这是获取公网ip的接口地址"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="text-align: center">
+                    <a class="layui-btn" id="savebt">保存</a>
+                </div>
+            </form>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                <legend>定时任务列表</legend>
+            </fieldset>
+            <div class="layui-form-pane">
+                <table class="layui-table layui-hide" id="test" lay-filter="test"></table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container" style="position: absolute;margin-left: 5px;">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加定时任务</button>
+    </div>
+</script>
+
+{{template "footer"}}
+<script type="application/javascript">
+    layui.use('laytpl', function () {
+        var laytpl = layui.laytpl;
+
+    });
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#test',
+            url: '/Page',
+            toolbar: '#toolbarDemo', //开启头部工具栏，并为其绑定左侧模板
+            defaultToolbar: ['filter', 'exports', 'print'],
+            title: '用户数据表',
+            cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            cols: [[
+                {field: 'id', title: '序号', sort: true, align: 'center', width: 180},
+                {field: 'domain', title: '顶级域名', align: 'center', width: 150},
+                {field: 'cron', title: '定时规则', align: 'center', width: 170},
+                {field: 'comment', title: '任务规则说明', align: 'center', width: 200},
+                {
+                    field: 'state', title: '任务状态', align: 'center', width: 90, templet: function (d) {
+                        console.log("1", d, d.state, typeof (d.state))
+                        return '<span class="layui-badge ' + ((d.state == 0 ? "layui-bg-orange" : "layui-bg-blue")) + ' "> ' + (d.state == 0 ? "已关闭" : "运行中") + ' </span>'
+                    }
+                },
+                {
+                    fixed: 'right', title: '操作', rowspan: 3, align: 'center', templet: function (d) {
+                        return "  <a class=\"layui-btn layui-btn-xs layui-btn-normal\" lay-event=\"start\">" + (d.state == 0 ? "启动" : "关闭") + "</a>       " +
+                            "  <a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n         " +
+                            "  <a class=\"layui-btn layui-btn-danger layui-btn-xs\" lay-event=\"del\">删除</a> "
+                    }
+                }
+            ]],
+            page: true,
+            limit: 10,
+        });
+        //头工具栏事件 table标签里 lay-filter="test"
+        table.on('toolbar(test)', function (obj) {
+            // console.log(1, "table.on('toolbar(test)'")
+
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    layer_show('添加定时任务', '/AddOrUpdateJobPage', 800, 350)
+                    break;
+            }
+        });
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var param = obj.data;
+
+            if (obj.event === 'del') {
+                layer.confirm('确认删除该任务吗?', function (index) {
+                    ajaxPostNoAsync("/DeleteJob", {"id": param.id, "domain": param.domain}, function (data) {
+                        console.log("DeleteJob:", data, typeof (data))
+                        if (data == "success") {
+                            obj.del();
+                            layer.msg('操作成功!', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                //do something
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('操作失败!', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                //do something
+                            });
+                        }
+                    })
+                });
+            } else if (obj.event === 'edit') {
+                layer_show('编辑定时任务', '/AddOrUpdateJobPage?id=' + param.id, 800, 350)
+            } else if (obj.event === 'start') {
+                var info = (param.state == 0 ? "启动" : "关闭")
+                layer.confirm('确认' + info + '该任务吗?', function (index) {
+                    ajaxPostNoAsync("/ChangeState", {
+                        "id": param.id,
+                        "state": param.state,
+                        "domain": param.domain,
+                        "cron": param.cron
+                    }, function (data) {
+                        console.log("ChangeState:", data)
+                        if (data == "success") {
+                            layer.msg('操作成功!', {
+                                icon: 1,
+                                time: 1500 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                window.parent.location.reload();
+                            });
+                        } else {
+                            layer.msg('操作失败!', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                //do something
+                            });
+                        }
+                    })
+                });
+            }
+        });
+
+    });
+
+    //保存配置信息
+    $("#savebt").click(function () {
+        var params = encodeURIComponent($('#form1').serialize())
+
+        console.log(1, params, $("#ACCESS_KEY_ID").val())
+        $.ajax({
+            method: "post",
+            url: "/UpdateConfig",
+            contentType: "application/form-data",
+            data: {
+                "ACCESS_KEY_ID": $("#ACCESS_KEY_ID").val(),
+                "ACCESS_KEY_SECRET": $("#ACCESS_KEY_SECRET").val(),
+                "IPAPI": $("#IPAPI").val(),
+            },
+            success: function (message) {
+                successMsg("保存成功!")
+            },
+            async: true,
+            error: function (error) {
+                alert(error);
+            }
+        });
+    })
+
+
+</script>
+</body>
+</html>
