@@ -3,28 +3,37 @@ package cronService
 import (
 	"AliYunDDns/app/service/aliyunddns"
 	"github.com/gogf/gf/os/gcron"
-	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/guuid"
-	"github.com/golang/glog"
-	"sync"
 )
+
+func RunOne(state int, domain string) (code, message string) {
+	if state == 0 {
+		aliyunddns.UpdateAllTypeA("[手动触发模式]", domain)
+		return "success", "手动触发执行成功"
+	} else if state == 1 {
+		//运行状态 触发一次即可
+		gcron.Start(domain)
+		return "success", "手动触发执行成功"
+	} else {
+		return "fail", "未知运行状态"
+	}
+}
 
 //更新已经运行的任务
 func UpdateRunCronJob(cron, domain string) {
 	RemoveCronJob(domain)
 	AddCronJob(cron, domain)
 }
+
+/**
+定时任务添加一个协程阻塞了，会不会阻塞web主线程测试
+*/
 func AddCronJob(cron, domain string) {
 	gcron.AddSingleton(cron, func() {
-		wait := sync.WaitGroup{}
-		wait.Add(1)
-		go aliyunddns.DDnsUpdateAllTypeA(domain, &wait)
-		wait.Wait()
-		glog.Info(gtime.Now(), " domain:", domain, " cron: ", cron, " 更新一次!")
+		aliyunddns.UpdateAllTypeA(cron, domain)
 	}, domain) //通过设置定时任务名控制任务状态
 	//todo:目前用domain管理即可，因为一个domain下只有一个任务,后续扩展出新场景，用id管理
 }
-
 func RemoveCronJob(domain string) {
 	search := gcron.Search(domain)
 	if search != nil && search.Name == domain {

@@ -102,6 +102,33 @@ function IsURL(strRegex, str) {
     }
 }
 
+/**
+ * 用这个方法 配合 r.Response.WriteJson(re) 渲染json
+ * @param _url
+ * @param data
+ * @param callBack
+ */
+function ajaxPostNoAsyncJson(_url, data, callBack) {
+    $.ajax({
+        type: "post",
+        url: _url,
+        data: data,
+        dataType: 'json',
+        async: false,
+        success: function (data) {
+            if (data) {
+                if (callBack) {
+                    callBack(data);
+                }
+            }
+
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+}
+
 function ajaxPostNoAsync(_url, data, callBack) {
     $.ajax({
         type: "post",

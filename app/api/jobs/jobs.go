@@ -27,6 +27,17 @@ type LayiUiTable struct {
 	Data  []*dns_jobs.Entity `json:"data"`
 }
 
+func RunOne(r *ghttp.Request) {
+	state := r.GetInt("state")
+	domain := r.GetString("domain")
+
+	code, message := cronService.RunOne(state, domain)
+	re := &ResultInfo{
+		Code:    code,
+		Message: message,
+	}
+	r.Response.WriteJson(re)
+}
 func ChangeState(r *ghttp.Request) {
 	id := r.GetString("id")
 	state := r.GetInt("state")

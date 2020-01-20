@@ -8,7 +8,10 @@ golang交叉编译跨平台可执行程序，一键运行，部署使用方便�
 ## 技术引入
 1. 后端golang框架：goframe   
 2. 后端数据库sqlite  
-3. 前端：layui jquery  
+3. 前端：layui jquery
+
+## git仓库地址
+    https://gitee.com/dwxdfhx/aliyunDDns
 
 ## 参考文档
 1. https://developer.aliyun.com/sdk?spm=a2c4g.11186623.2.16.30bc30b1I2tKHI  

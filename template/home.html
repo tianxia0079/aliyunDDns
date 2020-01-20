@@ -111,6 +111,7 @@
                 {
                     fixed: 'right', title: '操作', rowspan: 3, align: 'center', templet: function (d) {
                         return "  <a class=\"layui-btn layui-btn-xs layui-btn-normal\" lay-event=\"start\">" + (d.state == 0 ? "启动" : "关闭") + "</a>       " +
+                            "  <a class=\"layui-btn layui-btn-xs\" lay-event=\"run\">立即执行</a>\n         " +
                             "  <a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>\n         " +
                             "  <a class=\"layui-btn layui-btn-danger layui-btn-xs\" lay-event=\"del\">删除</a> "
                     }
@@ -175,6 +176,31 @@
                                 time: 1500 //2秒关闭（如果不配置，默认是3秒）
                             }, function () {
                                 window.parent.location.reload();
+                            });
+                        } else {
+                            layer.msg('操作失败!', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                //do something
+                            });
+                        }
+                    })
+                });
+            } else if (obj.event == 'run') {
+                layer.confirm('确认立即执行一次该任务吗?', function (index) {
+                    ajaxPostNoAsyncJson("/RunOne", {
+                        "id": param.id,
+                        "state": param.state,
+                        "domain": param.domain,
+                        "cron": param.cron
+                    }, function (data) {
+                        //console.log("RunOne:", data, typeof (data), data.code == "success")
+                        if (data.code == "success") {
+                            layer.msg('操作成功!', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
                             });
                         } else {
                             layer.msg('操作失败!', {

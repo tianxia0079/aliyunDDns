@@ -20,6 +20,7 @@ func init() {
 		group.ALL("/Page", jobs.Page)
 		group.ALL("/ChangeState", jobs.ChangeState)
 		group.ALL("/GfJobsInfo", jobs.GfJobsInfo)
+		group.ALL("/RunOne", jobs.RunOne)
 
 	})
 }

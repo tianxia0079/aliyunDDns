@@ -6,5 +6,9 @@ import (
 )
 
 func Help(r *ghttp.Request) {
+	/*go func() {
+		time.Sleep(1 * time.Hour)
+	}()*/
+
 	r.Response.WriteTpl("help.html", g.Map{"v": "1"})
 }
