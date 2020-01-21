@@ -4,6 +4,7 @@ import (
 	"AliYunDDns/app/api/help"
 	"AliYunDDns/app/api/home"
 	"AliYunDDns/app/api/jobs"
+	"AliYunDDns/app/middleware"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 )
@@ -11,8 +12,11 @@ import (
 func init() {
 	s := g.Server()
 	s.Group("/", func(group *ghttp.RouterGroup) {
-		group.ALL("/", home.Index)
-		group.ALL("/help", help.Help)
+		group.Middleware(middleware.MiddlewareAuth)
+		group.ALL("/", home.Login)
+		group.ALL("/Login", home.Login)
+		group.ALL("/Main", home.Main)
+		group.ALL("/Help", help.Help)
 		group.ALL("/UpdateConfig", home.UpdateConfig)
 		group.ALL("/AddOrUpdateJobPage", jobs.AddOrUpdateJobPage)
 		group.ALL("/AddOne", jobs.AddOne)

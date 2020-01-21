@@ -7,19 +7,17 @@ import (
 	_ "AliYunDDns/boot"
 	_ "AliYunDDns/router"
 	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/os/gsession"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/golang/glog"
+	"time"
 )
 
 func main() {
 	s := g.Server()
-	/*s.BindHookHandlerByMap("/*", map[string]ghttp.HandlerFunc{
-		ghttp.HOOK_BEFORE_SERVE:  func(r *ghttp.Request) { glog.Println(ghttp.HOOK_BEFORE_SERVE) },
-		ghttp.HOOK_AFTER_SERVE:   func(r *ghttp.Request) { glog.Println(ghttp.HOOK_AFTER_SERVE) },
-		ghttp.HOOK_BEFORE_OUTPUT: func(r *ghttp.Request) { glog.Println(ghttp.HOOK_BEFORE_OUTPUT) },
-		ghttp.HOOK_AFTER_OUTPUT:  func(r *ghttp.Request) { glog.Println(ghttp.HOOK_AFTER_OUTPUT) },
-	})*/
 	s.SetServerRoot("./public")
+	s.SetSessionMaxAge(6 * time.Hour)
+	s.SetSessionStorage(gsession.NewStorageMemory())
 	s.Start()
 	initConfig()
 	initJobs()

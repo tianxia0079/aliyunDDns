@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+    {{template "header"}}
+    <link rel="stylesheet" href="resource/css/admin.css">
+    <link rel="stylesheet" href="resource/css/login.css">
+
+</head>
+<body>
+<div class="layadmin-user-login-main" style="margin-top: 200px;">
+    <div class="layadmin-user-login-box layadmin-user-login-header">
+        <h2>AliYunDns</h2>
+        <p>定时更新阿里云域名公网IP</p>
+    </div>
+    <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+        <div class="layui-form-item">
+            <label class="layadmin-user-login-icon layui-icon layui-icon-username"
+                   for="LAY-user-login-username"></label>
+            <input type="text" name="username" id="LAY-user-login-username" lay-verify="required" placeholder="用户名"
+                   class="layui-input">
+        </div>
+        <div class="layui-form-item">
+            <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                   for="LAY-user-login-password"></label>
+            <input type="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码"
+                   class="layui-input">
+        </div>
+
+        <div class="layui-form-item">
+            <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="LAY-user-login-submit">登 入</button>
+        </div>
+    </div>
+</div>
+
+{{template "footer"}}
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        //提交
+        form.on('submit(LAY-user-login-submit)', function (obj) {
+            //console.log(obj, obj.field)
+            ajaxPostNoAsync("", obj.field, function (data) {
+                //console.log(data, typeof (data))
+                if (data && data == "true") {
+                    window.location.href = "/Main"
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

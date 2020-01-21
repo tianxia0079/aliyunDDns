@@ -61,7 +61,33 @@
                                class="layui-input">
                     </div>
                 </div>
-
+                <div class="layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label style="width: 100%;" class="layui-form-label" style="width: 20%">服务器最新IP</label>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                        <input type="text" id="UPTODATA_IP"  readonly="readonly" value="{{.UPTODATA_IP}}"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label style="width: 100%;" class="layui-form-label" style="width: 20%">登陆用户名</label>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                        <input type="text" id="username"  readonly="readonly" value="{{.username}}"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label style="width: 100%;" class="layui-form-label" style="width: 20%">登陆密码</label>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                        <input type="text" id="password"  readonly="readonly" value="{{.password}}"
+                               class="layui-input">
+                    </div>
+                </div>
                 <div class="layui-form-item" style="text-align: center">
                     <a class="layui-btn" id="savebt">保存</a>
                 </div>

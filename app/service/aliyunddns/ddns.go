@@ -24,7 +24,8 @@ var api = ""
 
 //系统启动加载参数；更新配置更新参数
 func InitConfig() {
-	key, secret, api = dns_configserver.GetApiConfigForUrl()
+	//系统缓存配置，不需要缓存ip
+	key, secret, api, _, _, _ = dns_configserver.GetApiConfigForUrl()
 }
 func getClient() (client *alidns.Client, err error) {
 	return alidns.NewClientWithAccessKey("", key, secret)
@@ -66,6 +67,11 @@ func UpdateAllTypeA(cron, domain string) string {
 		ip, _ := ioutil.ReadAll(result.Body)
 		//glog.Info("		当前公网 ip:" + string(ip))
 		re += "当前公网 ip:" + string(ip) + "\n"
+		//更新ip 无论后面程序是否执行  最新ip都更新到界面
+		go func(ipstr string) {
+			dns_configserver.UpdateIp(ipstr)
+		}(string(ip))
+
 		list := List(domain)
 		updateList := []alidns.Record{}
 		for _, v := range list {

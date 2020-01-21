@@ -10,6 +10,13 @@ golang交叉编译跨平台可执行程序，一键运行，部署使用方便�
 2. 后端数据库sqlite  
 3. 前端：layui jquery
 
+## 更新日志
+2020年1月21日
+-  服务器最新ip地址记录在界面上
+-  添加系统登录功能:  默认登陆账号  admin/admin
+-  基础表更新
+-  路由层方法重构
+
 ## git仓库地址
     https://gitee.com/dwxdfhx/aliyunDDns
 
