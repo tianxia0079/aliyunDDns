@@ -1,6 +1,6 @@
 # HTTP Server
 [server]
-	Address     = ":95"
+	Address     = ":95" #这里修改端口即可
 	ServerRoot  = "public"
 	ServerAgent = "AliYunDns"
 	LogPath     = "./logs/"

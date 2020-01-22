@@ -16,6 +16,14 @@ golang交叉编译跨平台可执行程序，一键运行，部署使用方便�
 -  添加系统登录功能:  默认登陆账号  admin/admin
 -  基础表更新
 -  路由层方法重构
+-  手动触发模式bug修复
+
+2020年1月22日
+-  调度阿里云ddns接口时，系统时间和北京时间误差不能太大,否则接口请求会失败。
+   添加系统启动自动同步为北京时间。北京时间接口：  
+   http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp  
+   windows下需要注意用管理员方式启动，linux要用root启动.
+-  自动进入系统主界面
 
 ## git仓库地址
     https://gitee.com/dwxdfhx/aliyunDDns
@@ -65,13 +73,13 @@ golang交叉编译跨平台可执行程序，一键运行，部署使用方便�
     ```
 
     使用xgo交叉编译：  
-    2.1 项目安装依赖
+    3.1 项目安装依赖
     go get github.com/karalabe/xgo  
-    2.2 安装docker镜像
+    3.2 安装docker镜像
     docker pull karalabe/xgo-latest
-    2.3 mkdir -p /go/src
+    3.3 mkdir -p /go/src
     把需要交叉编译的工程移到/go/src下，以后交叉编译的工程都放在该目录下
-    2.4 执行下面命令
+    3.4 执行下面命令
 
     ```
     cd /go/src/交叉编译的项目
@@ -81,7 +89,10 @@ golang交叉编译跨平台可执行程序，一键运行，部署使用方便�
     docker run -it --entrypoint /bin/bash  karalabe/xgo-latest
     
     docker run --rm -it -v "$PWD"/runapp:/build -v "$PWD"/vendor:/go/src -v "$PWD":/go/src/AliYunDns \
-    -e TARGETS=windows/amd64,darwin/amd64,linux/amd64 karalabe/xgo-latest AliYunDns
+    -e TARGETS=windows/amd64 karalabe/xgo-latest AliYunDns
+    
+    docker run --rm -it -v "$PWD"/runapp:/build -v "$PWD"/vendor:/go/src -v "$PWD":/go/src/AliYunDns \
+    -e TARGETS=linux/amd64 karalabe/xgo-latest AliYunDns
     
     #docker知识补充：
     #   -v 意思： /test:/soft 本地/tect目录作为容器的/soft目录

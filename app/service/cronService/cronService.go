@@ -7,16 +7,8 @@ import (
 )
 
 func RunOne(state int, domain string) (code, message string) {
-	if state == 0 {
-		aliyunddns.UpdateAllTypeA("[手动触发模式]", domain)
-		return "success", "手动触发执行成功"
-	} else if state == 1 {
-		//运行状态 触发一次即可
-		gcron.Start(domain)
-		return "success", "手动触发执行成功"
-	} else {
-		return "fail", "未知运行状态"
-	}
+	aliyunddns.UpdateAllTypeA("[手动触发模式]", domain)
+	return "success", "手动触发执行成功"
 }
 
 //更新已经运行的任务

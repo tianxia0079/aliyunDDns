@@ -4,6 +4,7 @@ import (
 	"AliYunDDns/app/service/aliyunddns"
 	"AliYunDDns/app/service/cronService"
 	"AliYunDDns/app/service/dns_jobs"
+	"AliYunDDns/app/util"
 	_ "AliYunDDns/boot"
 	_ "AliYunDDns/router"
 	"github.com/gogf/gf/frame/g"
@@ -21,6 +22,7 @@ func main() {
 	s.Start()
 	initConfig()
 	initJobs()
+	autoDO()
 	g.Wait()
 }
 
@@ -33,4 +35,9 @@ func initJobs() {
 }
 func initConfig() {
 	aliyunddns.InitConfig()
+}
+func autoDO() {
+	//自动更新系统时间
+	go util.UpdateSystemDateAuto()
+	util.OpenUrl("http://localhost" + g.Cfg().GetString("server.Address"))
 }

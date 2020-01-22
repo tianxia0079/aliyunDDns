@@ -1,0 +1,12 @@
+[compiler]
+    name     = "test1"
+    version  = "1.0.0"
+    arch     = "i386,amd64"
+    system   = "linux,windows,darwin"
+    output   = ""
+    path     = "./"
+    extra    = "-ldflags \"-s -w\""
+    # 自定义编译时内置变量
+    [compiler.VarMap]
+        author = "golang"
+        email  = "golang@qq.com"

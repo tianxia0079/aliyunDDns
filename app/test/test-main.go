@@ -11,7 +11,15 @@ import (
 )
 
 func main() {
-	f3()
+	util.OpenUrl("http://baidu.com")
+}
+func testsettime() {
+	getbeijingTime := util.GetbeijingTime()
+	state := util.UpdateSystemDate(getbeijingTime)
+	if state {
+		fmt.Println("设置成功")
+	}
+	time.Sleep(1 * time.Hour)
 }
 func f3() {
 	_, err := gcron.Add("asdfasdf", func() {
